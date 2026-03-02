@@ -1,0 +1,30 @@
+{
+  "name": "esbuild-bin",
+  "version": "1.0.0",
+  "description": "A lightweight front-end build tool based on esbuild, focusing on two core scenarios: browser-running projects and npm library building.",
+  "main": "index.js",
+  "module": "index.esm.js",
+  "bin": {
+    "esbuild-bin": "cli.js"
+  },
+  "files": [
+    "index.js",
+    "index.esm.js",
+    "cli.js"
+  ],
+  "keywords": [
+    "esbuild"
+  ],
+  "author": {
+    "name": "mycoin",
+    "email": "mycoin@icloud.com"
+  },
+  "license": "ISC",
+  "packageManager": "pnpm@10.28.0",
+  "dependencies": {
+    "fs-extra": "^11.3.3"
+  },
+  "peerDependencies": {
+    "esbuild": "^0.27.3"
+  }
+}
