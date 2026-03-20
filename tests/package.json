@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "dev": "node ../cli.js dev"
+    "dev": "node ../cli.js dev --server=999"
   }
 }

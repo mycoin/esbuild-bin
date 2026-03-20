@@ -9,7 +9,7 @@ const run = async (watch, esm) => {
     bundle: true,
     platform: "node",
     target: "esnext",
-    minify: true,
+    minify: false,
     format: esm ? "esm" : "cjs",
     outfile: esm ? pkg.module : pkg.main,
     logLevel: esm ? "silent" : "error",
@@ -22,7 +22,7 @@ const run = async (watch, esm) => {
           }
           build.onEnd((result) => {
             if (!result.errors.length) {
-              console.error("✅ compiled.");
+              console.log("✅ compiled.");
             }
           });
         },

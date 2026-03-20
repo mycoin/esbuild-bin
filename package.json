@@ -7,10 +7,15 @@
   "bin": {
     "esbuild-bin": "cli.js"
   },
+  "scripts": {
+    "dev": "node build.js watch",
+    "build": "node build.js"
+  },
   "files": [
     "index.js",
     "index.esm.js",
-    "cli.js"
+    "cli.js",
+    "build.js"
   ],
   "keywords": [
     "esbuild"
@@ -23,6 +28,9 @@
   "packageManager": "pnpm@10.28.0",
   "dependencies": {
     "fs-extra": "^11.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.3"
   },
   "peerDependencies": {
     "esbuild": "^0.27.3"
