@@ -1,18 +1,19 @@
 #!/usr/bin/env node
 
 const esbuild = require("esbuild");
-const pkg = require("./package.json");
+const pkg = require("../package.json");
 
 const run = async (watch, esm) => {
   const ctx = await esbuild.context({
-    entryPoints: ["src/index.ts"],
+    entryPoints: ["./src/index.ts"],
     bundle: true,
     platform: "node",
     target: "esnext",
-    minify: false,
     format: esm ? "esm" : "cjs",
     outfile: esm ? pkg.module : pkg.main,
     logLevel: esm ? "silent" : "error",
+    // 不打包 esbuild
+    external: ["esbuild"],
     plugins: [
       {
         name: "log",
@@ -44,8 +45,8 @@ const run = async (watch, esm) => {
   await run(watch, true);
 
   if (watch) {
-    console.log("Watching...");
+    console.log("🕐 Watching...");
   } else {
-    console.log("DONE");
+    console.log("✅ Compiled");
   }
 })();

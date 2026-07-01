@@ -28,34 +28,14 @@ npm install -D esbuild-bin
 ### 命令行
 
 ```bash
-esbuild-bin
-esbuild-bin dev
-esbuild-bin build
+esbuild-bin --production
+esbuild-bin --watch
+esbuild-bin --library
 ```
 
-## 1.1. Action 语义说明
+## 1.1. 配置文件
 
-`esbuild-bin` 提供两个 action：
-
-| action  | 说明                                 |
-| ------- | ------------------------------------ |
-| `dev`   | 启动开发服务器，启用 HMR，默认不写盘 |
-| `build` | 执行构建流程，默认压缩、写盘         |
-
-### 重要语义规则
-
-- `action` 是**最高语义入口**
-- 当 `action=build` 时：
-
-  - 所有 `devServer` / `server` 相关参数都会被忽略
-
-- 当 **未启用 devServer 且未显式关闭 `write`** 时：
-
-  - 将强制开启 `write=true`
-
-## 1.2. 配置文件
-
-支持 `build.config.js` / `build.config.ts`，**仅导出普通对象**：
+支持 `esbuild.config.js` / `esbuild.config.ts`，**仅导出普通对象**：
 
 ```ts
 export default {
@@ -71,26 +51,25 @@ export default {
 
 ### CLI / Config 通用参数
 
-| 参数           | 类型                                                   | 必填 | 默认值                      | 说明                     |
-| -------------- | ------------------------------------------------------ | ---- | --------------------------- | ------------------------ |
-| `action`       | `'dev' \| 'build'`                                     | 否   | `'build'`                   | 构建动作                 |
-| `entry`        | `Record<string, string>`                               | 否   | `{ index: '@/index' }`      | 入口配置                 |
-| `production`   | `boolean`                                              | 否   | `action === 'build'`        | 是否生产模式             |
-| `write`        | `boolean`                                              | 否   | `!devServer`                | 是否写入磁盘             |
-| `clean`        | `boolean`                                              | 否   | `true`                      | 构建前是否清空 outdir    |
-| `outdir`       | `string`                                               | 否   | `'dist'`                    | 输出目录                 |
-| `publicPrefix` | `string`                                               | 否   | `'/'`                       | 资源公共路径前缀         |
-| `vendorChunk`  | `string`                                               | 否   | `'vendor'`                  | 公共依赖 chunk 名称      |
-| `platform`     | `'browser'`                                            | 否   | `'browser'`                 | 运行平台                 |
-| `target`       | `string \| string[]`                                   | 否   | `'modern'`                  | 语法转译目标             |
-| `minify`       | `boolean \| 'whitespace' \| 'identifiers' \| 'syntax'` | 否   | `production ? true : false` | 压缩策略                 |
-| `sourcemap`    | `boolean \| 'inline' \| 'external'`                    | 否   | `production ? false : true` | Source Map               |
-| `define`       | `Record<string, any>`                                  | 否   | `{}`                        | 编译期常量               |
-| `loader`       | `Record<string, string>`                               | 否   | `{}`                        | esbuild loader 透传      |
-| `plugins`      | `Plugin[]`                                             | 否   | `[]`                        | esbuild 插件（用户优先） |
-| `library`      | `boolean`                                              | 否   | `false`                     | 是否构建 npm 库          |
-| `logLevel`     | `'silent' \| 'error' \| 'warn' \| 'info' \| 'debug'`   | 否   | `'info'`                    | 日志级别                 |
-| `analyze`      | `boolean \| 'json'`                                    | 否   | `false`                     | 构建分析输出             |
+| 参数           | 类型                                                 | 必填 | 默认值                      | 说明                     |
+| -------------- | ---------------------------------------------------- | ---- | --------------------------- | ------------------------ |
+| `entry`        | Record<string, string>                               | 否   | `{ index: '@/index' }`      | 入口配置                 |
+| `production`   | boolean                                              | 否   | `action === 'build'`        | 是否生产模式             |
+| `write`        | boolean                                              | 否   | `!devServer`                | 是否写入磁盘             |
+| `clean`        | boolean                                              | 否   | `true`                      | 构建前是否清空 outdir    |
+| `outdir`       | string                                               | 否   | `'dist'`                    | 输出目录                 |
+| `publicPrefix` | string                                               | 否   | `'/'`                       | 资源公共路径前缀         |
+| `vendorChunk`  | string                                               | 否   | `'vendor'`                  | 公共依赖 chunk 名称      |
+| `platform`     | "browser"                                            | 否   | `'browser'`                 | 运行平台                 |
+| `target`       | string, string[]                                     | 否   | `'modern'`                  | 语法转译目标             |
+| `minify`       | boolean \| 'whitespace' \| 'identifiers' \| 'syntax' | 否   | `production ? true : false` | 压缩策略                 |
+| `sourcemap`    | boolean \| 'inline' \| 'external'                    | 否   | `production ? false : true` | Source Map               |
+| `define`       | Record<string, any>                                  | 否   | `{}`                        | 编译期常量               |
+| `loader`       | Record<string, string>                               | 否   | `{}`                        | esbuild loader 透传      |
+| `plugins`      | Plugin[]                                             | 否   | `[]`                        | esbuild 插件（用户优先） |
+| `library`      | boolean                                              | 否   | `false`                     | 是否构建 npm 库          |
+| `logLevel`     | 'silent' \| 'error' \| 'warn' \| 'info' \| 'debug'   | 否   | `'info'`                    | 日志级别                 |
+| `analyze`      | boolean \| 'json'                                    | 否   | `false`                     | 构建分析输出             |
 
 ## 1.3.1. outdir 安全校验（**强制规则**）
 
@@ -109,7 +88,6 @@ write === true && clean !== false;
 以下配置 **将直接报错并终止构建**：
 
 - 根目录或当前目录：
-
   - `/`
   - `./`
   - `.`
@@ -186,9 +164,7 @@ jsx: "auto" | "preserve" | "react" | "react-jsx" | "solid" | "vue";
 
 - **显式配置优先**
 - 未配置时：
-
   - 自动读取 `tsconfig.json` 中的：
-
     - `jsx`
     - `jsxFactory`
     - `jsxFragmentFactory`
@@ -196,11 +172,11 @@ jsx: "auto" | "preserve" | "react" | "react-jsx" | "solid" | "vue";
 
 ## 1.7. 内置编译期常量（不可覆盖）
 
-| 常量       | 类型                            | 说明                 |
-| ---------- | ------------------------------- | -------------------- |
-| `MODE`     | `'development' \| 'production'` | 构建模式             |
-| `VERSION`  | `string`                        | package.json version |
-| `BUILD_TS` | `number`                        | 构建时间戳（毫秒）   |
+| 常量       | 类型                          | 说明                 |
+| ---------- | ----------------------------- | -------------------- |
+| `MODE`     | `development` ,  `production` | 构建模式             |
+| `VERSION`  | `string`                      | package.json version |
+| `BUILD_TS` | `number`                      | 构建时间戳（毫秒）   |
 
 > 用户通过 `define` 传入同名字段将被忽略。
 

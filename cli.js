@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-const { defineConfig, normalize, parseArgs, run } = require(".");
-const argv = parseArgs(process.argv.slice(2));
+const { buildContext, normalize, parseArgs, run } = require(".");
 
 process.on("uncaughtException", (error) => {
   console.error(error.message);
@@ -11,7 +10,17 @@ process.on("SIGINT", () => {
   process.exit(0);
 });
 
-const opts = normalize(argv);
-const config = defineConfig(opts);
+const main = async () => {
+  const opts = parseArgs(process.argv.slice(2));
+  const config = normalize(opts);
+  console.error(config);
 
-run(config, opts);
+  // const ctx = await buildContext(config);
+
+  // await ctx.rebuild();
+  // await ctx.watch({
+  //   delay: 300,
+  // });
+};
+
+main();
