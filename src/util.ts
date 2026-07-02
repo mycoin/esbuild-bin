@@ -1,5 +1,5 @@
 import {
-  parseArgs,
+  parseArgs as parse,
   ParseArgsOptionDescriptor,
   ParseArgsOptionsConfig,
 } from "util";
@@ -32,10 +32,10 @@ const getOptionsConfig = <T>(defaults: T) => {
   return optionsConfig;
 };
 
-export const parseArgv = <T>(args: string[], defaults: T): T => {
+export const parseArgs = <T>(args: string[], defaults: T): T => {
   const optionsConfig = getOptionsConfig(defaults);
   const results = {} as T;
-  const { values } = parseArgs({
+  const { values } = parse({
     args,
     allowNegative: true,
     allowPositionals: true,

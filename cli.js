@@ -10,10 +10,11 @@ process.on("SIGINT", () => {
   process.exit(0);
 });
 
-const main = async () => {
+const start = async () => {
   const opts = parseArgs(process.argv.slice(2));
-  const config = normalize(opts);
-  console.error(config);
+  // const config = normalize(opts);
+
+  console.error(opts);
 
   // const ctx = await buildContext(config);
 
@@ -23,4 +24,4 @@ const main = async () => {
   // });
 };
 
-main();
+start();

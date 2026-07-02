@@ -34,11 +34,8 @@ const normalizers: Normalize[] = [
 
   // 处理全局常量注入定义
   (opts, config) => {
-    const { define, production, platform } = opts;
+    const { define, platform } = opts;
     const returnValue: Record<string, string> = {};
-
-    define.DEV = !production;
-    define.PROD = production;
 
     for (const key in define) {
       const name =
@@ -77,16 +74,9 @@ export default (opts: Opts): Config => {
     // 构建目标运行平台
     platform,
     // 产物输出文件夹路径
-    outdir,
-    // sourcemap 生成模式
-    sourcemap,
     // 是否开启模块树摇优化
     treeShaking,
     // 是否为生产构建环境
-    production,
-    // 控制台日志输出级别
-    logLevel,
-    // 法律注释模式
     legalComments,
   } = opts;
 
@@ -100,7 +90,6 @@ export default (opts: Opts): Config => {
     // 模块解析扩展名列表
     resolveExtensions,
     // 产物输出文件夹路径
-    outdir,
     // 是否开启代码打包
     bundle: true,
     // 代码格式
@@ -110,9 +99,7 @@ export default (opts: Opts): Config => {
     // 目标浏览器版本
     target: ["esnext"],
     // 是否开启代码压缩
-    minify: !!production,
     // sourcemap 生成模式
-    sourcemap: platform === "node" ? false : sourcemap,
     // 是否开启模块树摇优化
     treeShaking,
     // 全局常量注入定义
@@ -124,7 +111,6 @@ export default (opts: Opts): Config => {
     // 法律注释
     legalComments,
     // 控制台日志输出级别
-    logLevel,
   };
 
   // 应用归一化函数
