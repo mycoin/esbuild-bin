@@ -3,9 +3,9 @@
     "lib": ["ESNext", "DOM"],
     "types": ["node"],
     "rootDir": "src",
-    "outDir": "lib",
+    "outDir": "dist",
     "declaration": true,
-    "declarationDir": "lib",
+    "declarationDir": "dist",
     "noCheck": true
   },
   "include": ["src"]
