@@ -5,12 +5,10 @@
     "moduleResolution": "NodeNext",
     "lib": ["ESNext", "DOM"],
     "types": ["node"],
-    "strict": false,
-    "skipLibCheck": true,
     "rootDir": "src",
     "declaration": true,
-    "declarationDir": "types",
-    "emitDeclarationOnly": true
+    "declarationDir": "typings",
+    "skipLibCheck": true
   },
   "include": ["src"]
 }
