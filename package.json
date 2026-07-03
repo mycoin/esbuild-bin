@@ -11,8 +11,8 @@
     "esbuild-bin": "cli.js"
   },
   "scripts": {
-    "dev": "node build.js watch",
-    "build": "node build.js"
+    "dev": "tsc --watch",
+    "build": "tsc"
   },
   "files": [
     "dist",

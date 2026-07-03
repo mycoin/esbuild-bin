@@ -1,6 +1,6 @@
 import { join } from "path";
 import { Plugin } from "esbuild";
-import { readJSONSync } from "fs-extra";
+import fs from "fs-extra";
 import { sassPlugin } from "esbuild-sass-plugin";
 import progressPlugin from "esbuild-plugin-progress";
 import { toLibraryName } from "./util.js";
@@ -42,7 +42,7 @@ const normalizers: Normalize[] = [
   // 处理库导出模式
   (config, opts) => {
     const { context, library, libraryName } = opts;
-    const packageJson = readJSONSync(join(context, "package.json"));
+    const packageJson = fs.readJSONSync(join(context, "package.json"));
 
     // 库导出模式
     if (library) {
