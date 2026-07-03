@@ -1,6 +1,6 @@
 {
   "name": "esbuild-bin",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A lightweight front-end build tool based on esbuild, focusing on two core scenarios: browser-running projects and npm library building.",
   "type": "module",
   "main": "dist/index.js",
@@ -12,7 +12,8 @@
   },
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc"
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "dist",
