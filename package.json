@@ -15,9 +15,8 @@
     "build": "node build.js"
   },
   "files": [
-    "bin/",
-    "lib/",
-    "types/"
+    "lib",
+    "cli.js"
   ],
   "keywords": [
     "esbuild"
