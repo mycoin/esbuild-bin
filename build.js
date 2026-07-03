@@ -16,7 +16,7 @@ const run = async (watch, format) => {
     outfile: format === "esm" ? pkg.module : pkg.main,
     logLevel: quiet ? "silent" : "error",
     // 不打包 esbuild
-    external: ["esbuild"],
+    packages: "external",
     plugins: quiet ? [] : [progressPlugin()],
   });
   if (watch) {

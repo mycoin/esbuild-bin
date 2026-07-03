@@ -1,6 +1,6 @@
-import normalize from "./normalize";
-import parseArgs from "./parseArgs";
-import run from "./run";
+import normalize from "./normalize.js";
+import parseArgs from "./parseArgs.js";
+import run from "./run.js";
 
 export {
   // 归一化配置

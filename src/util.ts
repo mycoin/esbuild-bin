@@ -52,6 +52,13 @@ const getOptionsConfig = <T>(defaults: T) => {
   return optionsConfig;
 };
 
+export const toLibraryName = (name: string) =>
+  name
+    .replace(/^@[^/]+\//, "")
+    .split(/[-_]/)
+    .map((s) => s[0].toUpperCase() + s.slice(1))
+    .join("");
+
 export const parseArgs = <T>(args: string[], defaults: T): Partial<T> => {
   const options = getOptionsConfig(defaults);
   const results: Record<string, unknown> = {};
@@ -63,6 +70,7 @@ export const parseArgs = <T>(args: string[], defaults: T): Partial<T> => {
       ...options,
     },
   });
+
   for (const k in values) {
     if (typeof defaults[k] === "number") {
       results[k] = Number(values[k]);
@@ -70,6 +78,5 @@ export const parseArgs = <T>(args: string[], defaults: T): Partial<T> => {
       results[k] = values[k];
     }
   }
-
   return results as Partial<T>;
 };

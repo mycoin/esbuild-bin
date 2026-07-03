@@ -1,5 +1,5 @@
-import { Opts, CliOpts, UserOpts } from "./interfaces";
-import { lookupConfig, parseArgs } from "./util";
+import { Opts, CliOpts, UserOpts } from "./interfaces.js";
+import { lookupConfig, parseArgs } from "./util.js";
 
 const defaultCliOpts: Required<CliOpts> = {
   // 产物输出文件夹路径
@@ -15,7 +15,7 @@ const defaultCliOpts: Required<CliOpts> = {
   // 是否启动本地开发服务
   server: false,
   // 控制台日志输出级别
-  logLevel: "verbose",
+  logLevel: "info",
 };
 
 const defaultUserOpts: Required<UserOpts> = {
@@ -38,16 +38,14 @@ const defaultUserOpts: Required<UserOpts> = {
   platform: "browser",
 
   // 是否启用库打包模式
-  library: false,
+  library: null,
   // 库名称
   libraryName: null,
-  // 库导出模式
-  libraryPackages: "bundle",
   // 库导出类型
-  libraryFormats: ["esm"],
+  libraryFormats: null,
 
   // JSX 预设框架名称
-  jsx: "preserve",
+  jsx: null,
   // JSX 工厂函数名称
   jsxFactory: null,
   // JSX 片段函数名称
@@ -56,50 +54,56 @@ const defaultUserOpts: Required<UserOpts> = {
   jsxImportSource: null,
 
   // 公共路径
-  publicPath: "./",
+  publicPath: "/",
   // 插件列表
   plugins: [],
-  // 是否开启模块树摇优化
-  treeShaking: false,
   // 法律注释模式
   legalComments: "external",
 };
 
+const getUserConfig = (opts: CliOpts): UserOpts => {
+  // 查找用户配置文件
+  const handler = lookupConfig();
+  const returnValue: UserOpts = {};
+  if (typeof handler === "function") {
+    Object.assign(
+      // 合并用户配置和命令行选项
+      returnValue,
+      // 执行用户配置函数
+      handler({
+        ...defaultCliOpts,
+        ...opts,
+      }),
+    );
+  } else if (handler && typeof handler === "object") {
+    // 合并用户配置文件对象
+    Object.assign(returnValue, handler);
+  }
+
+  return returnValue;
+};
+
 export default (args: string[]): Opts => {
   const cliOpts = parseArgs(args, defaultCliOpts);
-  const { context } = cliOpts;
 
   // 切换到构建上下文目录
-  if (context) {
-    process.chdir(context);
+  if (cliOpts.context) {
+    process.chdir(cliOpts.context);
   }
 
   // 查找用户配置文件
-  const handler = lookupConfig();
-  // 加载用户配置
-  const userConfig =
-    typeof handler == "function"
-      ? handler({
-          ...defaultCliOpts,
-          ...cliOpts,
-        })
-      : handler;
-
-  const templates = { ...defaultUserOpts, ...defaultCliOpts };
-  const returnValue: UserOpts = {
-    // 合并用户配置和命令行选项
-    ...userConfig,
-    // 合并命令行选项
+  const returnValue: Opts = {
+    ...defaultUserOpts,
+    ...defaultCliOpts,
+    ...getUserConfig(cliOpts),
     ...cliOpts,
   };
 
+  // 过滤掉空值
   for (const k in returnValue) {
-    if (typeof templates[k] == "undefined") {
-      throw new Error(`Unknown option ` + k);
+    if (returnValue[k] === null) {
+      delete returnValue[k];
     }
   }
-  return {
-    ...templates,
-    ...returnValue,
-  };
+  return returnValue;
 };

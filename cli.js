@@ -6,7 +6,7 @@ const start = async () => {
   const opts = parseArgs(process.argv.slice(2));
   const config = normalize(opts);
 
-  run(opts, config);
+  await run(opts, config);
 };
 
 process.on("SIGINT", () => {

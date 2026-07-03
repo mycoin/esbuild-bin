@@ -1,12 +1,10 @@
 import { join } from "path";
 import { Plugin } from "esbuild";
 import { readJSONSync } from "fs-extra";
-
 import { sassPlugin } from "esbuild-sass-plugin";
 import progressPlugin from "esbuild-plugin-progress";
-import { wasmLoader } from "esbuild-plugin-wasm";
-
-import { Config, Opts } from "./interfaces";
+import { toLibraryName } from "./util.js";
+import { Config, Opts } from "./interfaces.js";
 
 type Normalize = (config: Config, opts: Opts) => void;
 
@@ -23,29 +21,32 @@ const normalizers: Normalize[] = [
 
   // 处理 JSX 预设框架名称
   (config, opts) => {
-    const { jsx, jsxFactory, jsxFragment, jsxImportSource } = opts;
+    const { jsxFactory, jsxFragment, jsxImportSource } = opts;
 
-    if (jsx === "preserve") {
-      config.jsx = "preserve";
-    } else if (jsx === "automatic") {
-      config.jsx = "automatic";
-      config.jsxImportSource = jsxImportSource;
-    } else if (jsx === "transform") {
-      config.jsx = "transform";
-      config.jsxFactory = jsxFactory;
-      config.jsxFragment = jsxFragment;
+    switch (opts.jsx) {
+      case "preserve":
+        config.jsx = "preserve";
+        break;
+      case "automatic":
+        config.jsx = "automatic";
+        config.jsxImportSource = jsxImportSource;
+        break;
+      case "transform":
+        config.jsx = "transform";
+        config.jsxFactory = jsxFactory;
+        config.jsxFragment = jsxFragment;
+        break;
     }
   },
 
   // 处理库导出模式
   (config, opts) => {
-    const { context, library, libraryName, libraryPackages } = opts;
+    const { context, library, libraryName } = opts;
     const packageJson = readJSONSync(join(context, "package.json"));
 
     // 库导出模式
     if (library) {
-      config.globalName = libraryName || packageJson.name;
-      config.packages = libraryPackages;
+      config.globalName = libraryName || toLibraryName(packageJson.name);
     }
   },
 
@@ -60,6 +61,7 @@ const normalizers: Normalize[] = [
       // 是否为开发环境
       DEV: !production,
     };
+
     for (const key in defination) {
       const name =
         platform === "browser"
@@ -88,8 +90,6 @@ const normalizers: Normalize[] = [
       progressPlugin(),
       // 处理 Sass 样式
       sassPlugin(),
-      // 处理 WebAssembly 模块
-      wasmLoader(),
     ];
     config.plugins = plugins.filter((e) => e && e.name);
   },
@@ -112,8 +112,6 @@ export default (opts: Opts): Config => {
     publicPath,
     // sourcemap 生成模式
     sourcemap,
-    // 是否开启模块树摇优化
-    treeShaking,
     // 控制台日志输出级别
     logLevel,
     // 法律注释模式
@@ -152,8 +150,6 @@ export default (opts: Opts): Config => {
     plugins: [],
     // 工作目录
     absWorkingDir: process.cwd(),
-    // 是否开启模块树摇优化
-    treeShaking,
     // sourcemap 生成模式
     sourcemap,
     // 法律注释模式

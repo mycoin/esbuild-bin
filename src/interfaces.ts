@@ -1,3 +1,5 @@
+/// <reference lib="esnext" />
+
 import type {
   BuildOptions,
   Charset,
@@ -55,8 +57,6 @@ export type UserOpts = {
   library?: boolean;
   // 库名称
   libraryName?: string;
-  // 库导出模式
-  libraryPackages?: "bundle" | "external";
   // 库导出类型
   libraryFormats?: Format[];
 
@@ -73,8 +73,6 @@ export type UserOpts = {
   publicPath?: string;
   // 插件列表
   plugins?: Plugin[];
-  // 是否开启模块树摇优化
-  treeShaking?: boolean;
   // 法律注释模式
   legalComments?: "none" | "inline" | "eof" | "linked" | "external";
 };
