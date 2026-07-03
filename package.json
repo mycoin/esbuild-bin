@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "A lightweight front-end build tool based on esbuild, focusing on two core scenarios: browser-running projects and npm library building.",
   "type": "module",
-  "main": "index.js",
-  "module": "index.esm.js",
-  "types": "index.d.ts",
-  "typings": "index.d.ts",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "typings": "lib/index.d.ts",
   "bin": {
     "esbuild-bin": "cli.js"
   },
@@ -15,10 +15,9 @@
     "build": "node build.js"
   },
   "files": [
-    "index.js",
-    "index.esm.js",
-    "index.d.ts",
-    "cli.js"
+    "bin/",
+    "lib/",
+    "types/"
   ],
   "keywords": [
     "esbuild"
